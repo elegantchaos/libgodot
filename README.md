@@ -1,3 +1,11 @@
+libgodot-4.3-old-style
+
+This is Godot 4.3 + the old libgodot patches that allow a very
+primitive embedding of Godot, this is not the new 4.4-based system
+that is coming up.
+
+For that one, check https://github.com/migeran/libgodot_project/tree/libgodot_migeran_next_44
+
 # Godot Engine
 
 <p align="center">
