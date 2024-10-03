@@ -162,13 +162,23 @@ env.__class__.use_windows_spawn_fix = methods.use_windows_spawn_fix
 
 env.__class__.add_shared_library = methods.add_shared_library
 env.__class__.add_library = methods.add_library
-env.__class__.add_program = methods.add_program
+#env.__class__.add_program = methods.add_program
 env.__class__.CommandNoCache = methods.CommandNoCache
 env.__class__.Run = methods.Run
 env.__class__.disable_warnings = methods.disable_warnings
 env.__class__.force_optimization_on_debug = methods.force_optimization_on_debug
 env.__class__.module_add_dependencies = methods.module_add_dependencies
 env.__class__.module_check_dependencies = methods.module_check_dependencies
+
+env["library_type"] = ARGUMENTS.get("library_type", "")
+if env["library_type"] == "static_library":
+    env.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+elif env["library_type"] == "shared_library":
+    env.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env.Append(CCFLAGS=["-fPIC"])
+    env.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+else:
+    env.__class__.add_program = methods.add_program
 
 env["x86_libtheora_opt_gcc"] = False
 env["x86_libtheora_opt_vc"] = False
@@ -229,6 +239,14 @@ opts.Add("custom_modules", "A list of comma-separated directory paths containing
 opts.Add(BoolVariable("custom_modules_recursive", "Detect custom modules recursively for each specified path.", True))
 
 # Advanced options
+opts.Add(
+    EnumVariable(
+        "library_type",
+        "Build library type",
+        "executable",
+        ("executable", "static_library", "shared_library"),
+    )
+)
 opts.Add(BoolVariable("dev_mode", "Alias for dev options: verbose=yes warnings=extra werror=yes tests=yes", False))
 opts.Add(BoolVariable("tests", "Build the unit tests", False))
 opts.Add(BoolVariable("fast_unsafe", "Enable unsafe options for faster rebuilds", False))
