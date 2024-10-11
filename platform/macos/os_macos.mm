@@ -258,6 +258,13 @@ Error OS_MacOS::open_dynamic_library(const String &p_path, void *&p_library_hand
 		// Load .dylib or framework from PackageFrameworks (eg when running from the Xcode Build Folder).
 		path = get_framework_executable(get_executable_path().get_base_dir().path_join("PackageFrameworks").path_join(p_path.get_file()));
 	}
+
+	if (!FileAccess::exists(path)) {
+		// Load .dylib or framework from a custom location supplied on the command line.
+		path = get_framework_executable(OS::get_singleton()->get_dynamic_library_search_path().path_join(p_path.get_file()));
+		OS::get_singleton()->print("trying %s\n", path.utf8().get_data());
+	}
+
 #ifdef TOOLS_ENABLED
 	if (!FileAccess::exists(path)) {
 		if (has_environment("GODOT_EDITOR_LIBRARY_PATH")) {
