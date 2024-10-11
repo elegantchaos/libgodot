@@ -1543,7 +1543,6 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 				String p = N->get();
 				OS::get_singleton()->set_dynamic_library_search_path(p);
 				N = N->next();
-				OS::get_singleton()->print("Library path set to: \"%s\"\n", p.utf8().get_data());
 			}
 		} else if (arg == "-u" || arg == "--upwards") { // scan folders upwards
 			upwards = true;

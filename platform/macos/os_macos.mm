@@ -262,7 +262,6 @@ Error OS_MacOS::open_dynamic_library(const String &p_path, void *&p_library_hand
 	if (!FileAccess::exists(path)) {
 		// Load .dylib or framework from a custom location supplied on the command line.
 		path = get_framework_executable(OS::get_singleton()->get_dynamic_library_search_path().path_join(p_path.get_file()));
-		OS::get_singleton()->print("trying %s\n", path.utf8().get_data());
 	}
 
 #ifdef TOOLS_ENABLED
