@@ -220,6 +220,23 @@ _FORCE_INLINE_ String OS_MacOS::get_framework_executable(const String &p_path) {
 		return p_path.path_join(p_path.get_file().get_basename());
 	}
 
+	// If we've got no extension, try a couple
+	// of common patterns: lib<name>.dylib and <name>.framework.
+	if (p_path.get_extension().is_empty()) {
+		// Try adding .dylib extension.
+		String dylib_path = p_path.get_base_dir().path_join("lib" + p_path.get_file().get_basename() + ".dylib");
+		String expanded_dylib_path = get_framework_executable(dylib_path);
+		if (da->file_exists(expanded_dylib_path)) {
+			return expanded_dylib_path;
+		}
+		// Try adding .framework extension.
+		String framework_path = p_path + ".framework";
+		String expanded_framework_path = get_framework_executable(framework_path);
+		if (da->file_exists(expanded_framework_path)) {
+			return expanded_framework_path;
+		}
+	}
+
 	// Not a framework, try loading as .dylib.
 	return p_path;
 }
