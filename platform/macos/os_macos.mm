@@ -237,6 +237,15 @@ Error OS_MacOS::open_dynamic_library(const String &p_path, void *&p_library_hand
 		path = get_framework_executable(get_executable_path().get_base_dir().path_join("../Frameworks").path_join(p_path.get_file()));
 	}
 
+#ifdef TOOLS_ENABLED
+	if (!FileAccess::exists(path)) {
+		if (has_environment("GODOT_EDITOR_LIBRARY_PATH")) {
+			// Load .dylib or framework from a custom location supplied by the environment.
+			path = get_framework_executable(get_environment("GODOT_EDITOR_LIBRARY_PATH").path_join(p_path.get_file()));
+		}
+	}
+#endif
+
 	ERR_FAIL_COND_V(!FileAccess::exists(path), ERR_FILE_NOT_FOUND);
 
 	p_library_handle = dlopen(path.utf8().get_data(), RTLD_NOW);
